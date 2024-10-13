@@ -5,6 +5,28 @@ import json
 import shutil
 
 
+def log_print(type:str, message:str):
+    """Prints out a formatted log message. Available types are error, info and done.
+
+    Args:
+        type (str): The type of message. Available: error, info, done 
+        message (str): The message, which is printed out
+    """
+    
+    bold = "\033[1m"
+    red = "\033[31m"
+    green = "\033[32m"
+    cyan = "\033[36m"
+    white = "\033[37m"
+    reset = "\033[0m"
+    
+    string_list = {"error": f"[{red}ERROR{white}]",
+                   "info": f"[{cyan}INFO{white}]",
+                   "done": f"[{green}DONE{white}]"}
+    
+    print(f"{bold}{string_list[type]}{reset}", message)
+
+
 def copy_item(source_path: str, destination_path: str, ignore_list: list):
     """Copies a file or directory to a given directory.
 
