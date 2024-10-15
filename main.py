@@ -56,12 +56,16 @@ def main():
                 log_print("error", "-c: config path expected. Fallback to 'config.json'.")
     
     # reading config file
-    log_print("info", "Reading config file.")
-    with open(config_path, "r") as file:
-        config_dict = json.load(file)
-    destination_path = config_dict["destination_path"] + f"{int(time.time())}/"
-    source_path_list = config_dict["source_list"]
-    ignore_list = config_dict["ignore_list"]
+    if os.path.isfile(config_path) is False:
+        log_print("error", f"Config file '{config_path}' not found.")
+        return
+    else:
+        log_print("info", "Reading config file.")
+        with open(config_path, "r") as file:
+            config_dict = json.load(file)
+        destination_path = config_dict["destination_path"] + f"{int(time.time())}/"
+        source_path_list = config_dict["source_list"]
+        ignore_list = config_dict["ignore_list"]
     
     # copying files
     log_print("info", "Starting the copy process.")
