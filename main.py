@@ -19,7 +19,6 @@ def log_print(type:str, message:str):
     cyan = "\033[36m"
     white = "\033[37m"
     reset = "\033[0m"
-    
     string_list = {"error": f"[{red}ERROR{white}]",
                    "info": f"[{cyan}INFO{white}]",
                    "done": f"[{green}DONE{white}]"}
@@ -54,9 +53,10 @@ def main():
             if len(sys.argv) > index + 1:
                 config_path = sys.argv[index + 1]
             else:
-                print("-c: config path expected.")
+                log_print("error", "-c: config path expected. Fallback to 'config.json'.")
     
     # reading config file
+    log_print("info", "Reading config file.")
     with open(config_path, "r") as file:
         config_dict = json.load(file)
     destination_path = config_dict["destination_path"] + f"{int(time.time())}/"
@@ -64,8 +64,10 @@ def main():
     ignore_list = config_dict["ignore_list"]
     
     # copying files
+    log_print("info", "Starting the copy process.")
     for source_path in source_path_list:
         copy_item(source_path, destination_path, ignore_list)
+    log_print("done", "Copied.")
 
 
 if __name__ == "__main__":
