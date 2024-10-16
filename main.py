@@ -37,12 +37,14 @@ def copy_item(source_path: str, destination_path: str, ignore_list: list):
 
     ignore_patterns = shutil.ignore_patterns(*ignore_list)
     if os.path.isdir(source_path):
-        shutil.copytree(source_path, destination_path, ignore=ignore_patterns)
+        if os.path.isdir(destination_path) is False:
+            shutil.copytree(source_path, destination_path, ignore=ignore_patterns)
+        else:
+            log_print("error", f"Directory already exists.")
     elif os.path.isfile(source_path):
         shutil.copy2(source_path, destination_path)
     else:
         log_print("error", f"Path '{source_path}' was not found.")
-
 
 def main():
 
@@ -76,7 +78,7 @@ def main():
         ignore_list = config_dict["ignore_list"]
     
     # copying files
-    log_print("info", "Starting the copy process.")
+    log_print("info", f"Starting the copy process to '{destination_path}'.")
     for destination_directory, source_path_list in source_path_directory.items():
         for path in source_path_list:
             if destination_directory == "root":
@@ -85,7 +87,8 @@ def main():
             else:
                 log_print("info", f"Copying to '{destination_directory}': '{path}'.")
                 combined_destination_path = os.path.join(destination_path, destination_directory)
-                os.makedirs(combined_destination_path)
+                if os.path.isdir(combined_destination_path) is False:
+                    os.makedirs(combined_destination_path)
                 copy_item(path, combined_destination_path, ignore_list)
     
     log_print("done", "Copied.")
