@@ -80,8 +80,10 @@ def main():
     for destination_directory, source_path_list in source_path_directory.items():
         for path in source_path_list:
             if destination_directory == "root":
+                log_print("info", f"Copying '{path}'.")
                 copy_item(path, destination_path, ignore_list)
             else:
+                log_print("info", f"Copying to '{destination_directory}': '{path}'.")
                 combined_destination_path = os.path.join(destination_path, destination_directory)
                 os.makedirs(combined_destination_path)
                 copy_item(path, combined_destination_path, ignore_list)
