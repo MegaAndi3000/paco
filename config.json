@@ -1,5 +1,5 @@
 {
     "destination_path": "",
-    "source_list": [],
+    "source_list": {"root": []},
     "ignore_list": []
 }
