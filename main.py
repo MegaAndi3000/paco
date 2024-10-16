@@ -36,10 +36,12 @@ def copy_item(source_path: str, destination_path: str, ignore_list: list):
     """
 
     ignore_patterns = shutil.ignore_patterns(*ignore_list)
-    if source_path[-1] in ['/', '\\']:
+    if os.path.isdir(source_path):
         shutil.copytree(source_path, destination_path, ignore=ignore_patterns)
-    else:
+    elif os.path.isfile(source_path):
         shutil.copy2(source_path, destination_path)
+    else:
+        log_print("error", f"Path '{source_path}' was not found.")
 
 
 def main():
