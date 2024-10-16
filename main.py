@@ -48,14 +48,20 @@ def main():
 
     main_dir = os.path.dirname(__file__)
     config_path = os.path.join(main_dir, "config.json")
+    output_name = str(int(time.time()))
     
     # reading command line arguments
     for index, arg in enumerate(sys.argv):
         if arg in ["-c", "--config"]:
-            if len(sys.argv) > index + 1:
+            if len(sys.argv) > index + 1 and sys.argv[index + 1][0] != '-':
                 config_path = sys.argv[index + 1]
             else:
                 log_print("error", "-c: config path expected. Fallback to 'config.json'.")
+        elif arg in ["-n", "--name"]:
+            if len(sys.argv) > index + 1 and sys.argv[index + 1][0] != '-':
+                output_name = sys.argv[index + 1]
+            else:
+                log_print("error", f"-n: name of output directory expected. Fallback to '{output_name}'.")
     
     # reading config file
     if os.path.isfile(config_path) is False:
@@ -65,7 +71,7 @@ def main():
         log_print("info", "Reading config file.")
         with open(config_path, "r") as file:
             config_dict = json.load(file)
-        destination_path = config_dict["destination_path"] + f"{int(time.time())}/"
+        destination_path = os.path.join(config_dict["destination_path"], output_name)
         source_path_directory = config_dict["source_list"]
         ignore_list = config_dict["ignore_list"]
     
