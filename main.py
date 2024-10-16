@@ -64,13 +64,20 @@ def main():
         with open(config_path, "r") as file:
             config_dict = json.load(file)
         destination_path = config_dict["destination_path"] + f"{int(time.time())}/"
-        source_path_list = config_dict["source_list"]
+        source_path_directory = config_dict["source_list"]
         ignore_list = config_dict["ignore_list"]
     
     # copying files
     log_print("info", "Starting the copy process.")
-    for source_path in source_path_list:
-        copy_item(source_path, destination_path, ignore_list)
+    for destination_directory, source_path_list in source_path_directory.items():
+        for path in source_path_list:
+            if destination_directory == "root":
+                copy_item(path, destination_path, ignore_list)
+            else:
+                combined_destination_path = os.path.join(destination_path, destination_directory)
+                os.makedirs(combined_destination_path)
+                copy_item(path, combined_destination_path, ignore_list)
+    
     log_print("done", "Copied.")
 
 
