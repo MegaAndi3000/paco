@@ -26,6 +26,25 @@ def log_print(type:str, message:str):
     print(f"{bold}{string_list[type]}{reset}", message)
 
 
+def set_string_length(string:str, length:int):
+    """Extends or shortens a given string to a given length.
+
+    Args:
+        string (str): string, which is to be edited
+        length (int): the resulting length
+
+    Returns:
+        str: edited string with given length
+    """
+    
+    if len(string) > length:
+        new_string = string[:length]
+    else:
+        new_string = string + " " * (length - len(string))    
+    
+    return new_string
+
+
 def copy_item(source_path: str, destination_path: str, ignore_list: list):
     """Copies a file or directory to a given directory.
 
@@ -53,7 +72,17 @@ def main():
     
     # reading command line arguments
     for index, arg in enumerate(sys.argv):
-        if arg in ["-c", "--config"]:
+        if arg in ["-h", "--help"]:
+            print("Arguments:")
+            arguments = {
+                "config": "Specifies the path to the configuration file. By default the path './config.json' is used.",
+                "help": "Displays this message.",
+                "name": "Specifies the name of the destination folder (not the path!). By default the name is set to the current unix timestamp."
+            }
+            for argument, description in arguments.items():
+                print(f"{set_string_length(f'-{argument[0]}, --{argument}', 16)} - {description}")
+            return
+        elif arg in ["-c", "--config"]:
             if len(sys.argv) > index + 1 and sys.argv[index + 1][0] != '-':
                 config_path = sys.argv[index + 1]
             else:
