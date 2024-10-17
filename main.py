@@ -101,12 +101,14 @@ def main():
         log_print("info", "Reading config file.")
         with open(config_path, "r") as file:
             config_dict = json.load(file)
-        destination_path = os.path.join(config_dict["destination_path"], output_name)
+        destination_path = os.path.join(config_dict["destination_path"], output_name) + '/'
         source_path_directory = config_dict["source_list"]
         ignore_list = config_dict["ignore_list"]
     
     # copying files
     log_print("info", f"Starting the copy process to '{destination_path}'.")
+    if os.path.isdir(destination_path) is False:
+        os.makedirs(destination_path)
     for destination_directory, source_path_list in source_path_directory.items():
         for path in source_path_list:
             if destination_directory == "root":
