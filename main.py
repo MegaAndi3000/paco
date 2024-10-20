@@ -68,7 +68,7 @@ def copy_item(source_path: str, destination_path: str, ignore_list: list):
 
 def main():
 
-    main_dir = os.path.dirname(__file__)
+    main_dir = os.path.dirname(sys.argv[0])
     config_path = os.path.join(main_dir, "config.json")
     output_name = str(int(time.time()))
     
