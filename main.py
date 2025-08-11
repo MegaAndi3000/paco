@@ -3,8 +3,6 @@ import sys
 import time
 import json
 import shutil
-from colorama import just_fix_windows_console
-just_fix_windows_console()
 
 
 def log_print(type:str, message:str):
