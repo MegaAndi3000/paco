@@ -104,6 +104,7 @@ def main():
         destination_path = os.path.join(config_dict["destination_path"], output_name) + '/'
         source_path_directory = config_dict["source_list"]
         ignore_list = config_dict["ignore_list"]
+        shortcuts = config_dict["shortcuts"]
     
     # copying files
     log_print("info", f"Starting the copy process to '{destination_path}'.")
@@ -111,6 +112,8 @@ def main():
         os.makedirs(destination_path)
     for destination_directory, source_path_list in source_path_directory.items():
         for path in source_path_list:
+            for short, full in shortcuts.items():
+                path = path.replace(short, full)
             if destination_directory == "root":
                 log_print("info", f"Copying '{path}'.")
                 copy_item(path, destination_path, ignore_list)
