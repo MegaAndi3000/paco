@@ -8,9 +8,6 @@
 2. If you want an executable (and have `make` and `pyinstaller` installed): simply run `make` in the cloned repository.
 3. Done!
 
-> [!Note]
-> Windows executables can also be found in the [releases page](https://github.com/MegaAndi3000/paco/releases).
-
 ## Usage
 
 In order to start the copy process, you simply have to run the `main.py` file or a given executable with an appropriate configuration file.
@@ -21,14 +18,13 @@ By default paco uses './config.json' as a configuration file. You can however sp
 
 The config consists of 3 arguments:
 
-| Argument         | Description                                                                                                                                                                      |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| destination_path | Path to directory, in which the destination folder will be created.                                                                                                              |
+| Argument | Description |
+| --- | --- |
+| destination_path | Path to directory, in which the destination folder will be created. |
+| shortcuts | JSON-object, whose keys will be replaced in source_list origin paths by their respective value. |
 | source_list      | JSON-object, where the key specifies the name of the destination subdirectory and the value is a list of source files/folders. If the key is "root", no subdirectory is created. |
-| ignore_list      | List of file/folder names, which are to be ignored when copying.                                                                                                                 |
+| ignore_list      | List of file/folder names, which are to be ignored when copying. |
 
-> [!Warning]
-> At the moment paco does not support relative paths!
 
 ### Example
 
@@ -58,10 +54,11 @@ input
 ```json
 {
    "destination_path": "path/",
-   "source_list": {"root": ["path/input/A/A1",
-                            "path/input/A/file_a",
-                            "path/input/A/file_a_2",
-                            "path/input/B"],
+   "shortcuts": {"my_dir": "/path/to/input"},
+   "source_list": {"root": ["my_dir/A/A1",
+                            "my_dir/A/file_a",
+                            "my_dir/A/file_a_2",
+                            "my_dir/B"],
                    "C": ["path/input/C/file_c_2"]},
    "ignore_list": []
 }
