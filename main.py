@@ -5,25 +5,9 @@ import json
 import shutil
 
 
-def log_print(type:str, message:str):
-    """Prints out a formatted log message. Available types are error, info and done.
-
-    Args:
-        type (str): The type of message. Available: error, info, done 
-        message (str): The message, which is printed out
-    """
-    
-    bold = "\033[1m"
-    red = "\033[31m"
-    green = "\033[32m"
-    cyan = "\033[36m"
-    white = "\033[37m"
-    reset = "\033[0m"
-    string_list = {"error": f"[{red}ERROR{white}]",
-                   "info": f"[{cyan}INFO{white}]",
-                   "done": f"[{green}DONE{white}]"}
-    
-    print(f"{bold}{string_list[type]}{reset}", message)
+ERROR_STRING = "\033[1m[\033[31mERROR\033[37m]\033[0m"
+DONE_STRING = "\033[1m[\033[32mDONE\033[37m]\033[0m"
+INFO_STRING = "\033[1m[\033[36mINFO\033[37m]\033[0m"
 
 
 def set_string_length(string:str, length:int):
@@ -61,7 +45,7 @@ def copy_item(source_path: str, destination_path: str, ignore_list: list):
     elif os.path.isfile(source_path):
         shutil.copy2(source_path, destination_path)
     else:
-        log_print("error", f"Path '{source_path}' was not found.")
+        print(f"{ERROR_STRING} Path '{source_path}' was not found.")
 
 
 def main():
@@ -86,19 +70,18 @@ def main():
             if len(sys.argv) > index + 1 and sys.argv[index + 1][0] != '-':
                 config_path = sys.argv[index + 1]
             else:
-                log_print("error", "-c: config path expected. Fallback to 'config.json'.")
+                exit(f"{ERROR_STRING} -c: config path expected.")
         elif arg in ["-n", "--name"]:
             if len(sys.argv) > index + 1 and sys.argv[index + 1][0] != '-':
                 output_name = sys.argv[index + 1]
             else:
-                log_print("error", f"-n: name of output directory expected. Fallback to '{output_name}'.")
+                exit(f"{ERROR_STRING} -n: name of output directory expected.")
     
     # reading config file
     if os.path.isfile(config_path) is False:
-        log_print("error", f"Config file '{config_path}' not found.")
-        return
+        exit(f"{ERROR_STRING} Config file '{config_path}' not found.")
     else:
-        log_print("info", "Reading config file.")
+        print(f"{INFO_STRING} Reading config file.")
         with open(config_path, "r") as file:
             config_dict = json.load(file)
         destination_path = os.path.join(config_dict["destination_path"], output_name) + '/'
@@ -107,7 +90,7 @@ def main():
         shortcuts = config_dict["shortcuts"]
     
     # copying files
-    log_print("info", f"Starting the copy process to '{destination_path}'.")
+    print(f"{INFO_STRING} Starting the copy process to '{destination_path}'.")
     if os.path.isdir(destination_path) is False:
         os.makedirs(destination_path)
     for destination_directory, source_path_list in source_path_directory.items():
@@ -115,16 +98,16 @@ def main():
             for short, full in shortcuts.items():
                 path = path.replace(short, full)
             if destination_directory == "root":
-                log_print("info", f"Copying '{path}'.")
+                print(f"{INFO_STRING} Copying '{path}'.")
                 copy_item(path, destination_path, ignore_list)
             else:
-                log_print("info", f"Copying to '{destination_directory}': '{path}'.")
+                print(f"{INFO_STRING} Copying to '{destination_directory}': '{path}'.")
                 combined_destination_path = os.path.join(destination_path, destination_directory)
                 if os.path.isdir(combined_destination_path) is False:
                     os.makedirs(combined_destination_path)
                 copy_item(path, combined_destination_path, ignore_list)
     
-    log_print("done", "Copied.")
+    print(f"{DONE_STRING} Copied.")
 
 
 if __name__ == "__main__":
